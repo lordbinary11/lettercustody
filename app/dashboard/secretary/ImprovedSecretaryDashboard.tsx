@@ -3,6 +3,8 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Letter, LetterWithDetails } from '@/types';
 import { EnhancedLetterTable } from '@/components/letters/EnhancedLetterTable';
+import { BulkLetterTable } from '@/components/letters/BulkLetterTable';
+import { DepartmentSelect } from '@/components/ui/DepartmentSelect';
 import { LetterDetailPanel } from '@/components/letters/LetterDetailPanel';
 import { DispatchLetterActions } from './DispatchLetterActions';
 import { CreateLetterForm } from './CreateLetterForm';
@@ -19,6 +21,7 @@ export function ImprovedSecretaryDashboard({ letters }: ImprovedSecretaryDashboa
   const [selectedMonth, setSelectedMonth] = useState<string>('');
   const [selectedYear, setSelectedYear] = useState<string>('');
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [isBulkLoading, setIsBulkLoading] = useState(false);
 
   // Fetch letter details when a letter is selected
   useEffect(() => {
@@ -71,6 +74,34 @@ export function ImprovedSecretaryDashboard({ letters }: ImprovedSecretaryDashboa
 
   const createdLetters = letters.filter(l => l.status === 'created');
   const dispatchedLetters = letters.filter(l => l.status !== 'created');
+
+  const handleBulkDispatch = async (letterIds: string[], targetDepartment: string) => {
+    setIsBulkLoading(true);
+    try {
+      const response = await fetch('/api/letters/bulk-dispatch', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ letterIds, targetDepartment }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        // Refresh page to show updated data
+        window.location.reload();
+      } else {
+        console.error('Bulk dispatch failed:', result.error);
+        alert('Failed to dispatch letters: ' + result.error);
+      }
+    } catch (error) {
+      console.error('Bulk dispatch error:', error);
+      alert('Failed to dispatch letters. Please try again.');
+    } finally {
+      setIsBulkLoading(false);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -183,11 +214,15 @@ export function ImprovedSecretaryDashboard({ letters }: ImprovedSecretaryDashboa
 
         <div className="p-6">
           {activeTab === 'awaiting' ? (
-            <EnhancedLetterTable
+            <BulkLetterTable
               letters={createdLetters}
               onRowClick={setSelectedLetter}
               showDepartment={false}
               emptyMessage="No letters awaiting dispatch"
+              showBulkActions={true}
+              bulkActionType="forward-custom"
+              onBulkForwardToDepartment={handleBulkDispatch}
+              isBulkLoading={isBulkLoading}
             />
           ) : (
             <div className="space-y-4">
