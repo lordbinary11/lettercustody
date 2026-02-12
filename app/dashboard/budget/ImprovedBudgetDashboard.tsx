@@ -3,6 +3,8 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Letter, LetterWithDetails } from '@/types';
 import { EnhancedLetterTable } from '@/components/letters/EnhancedLetterTable';
+import { BulkLetterTable } from '@/components/letters/BulkLetterTable';
+import { DepartmentSelect } from '@/components/ui/DepartmentSelect';
 import { LetterDetailPanel } from '@/components/letters/LetterDetailPanel';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { DepartmentBadge } from '@/components/ui/DepartmentBadge';
@@ -27,6 +29,7 @@ export function ImprovedBudgetDashboard({
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedMonth, setSelectedMonth] = useState<string>('');
   const [selectedYear, setSelectedYear] = useState<string>('');
+  const [isBulkLoading, setIsBulkLoading] = useState(false);
 
   useEffect(() => {
     if (selectedLetter) {
@@ -120,6 +123,149 @@ export function ImprovedBudgetDashboard({
 
   const getActionRequired = () => {
     return incomingLetters.length > 0 ? incomingLetters.length : null;
+  };
+
+  const handleBulkAccept = async (letterIds: string[]) => {
+    setIsBulkLoading(true);
+    try {
+      const response = await fetch('/api/letters/bulk-accept', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ letterIds }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        // Refresh the page to show updated data
+        window.location.reload();
+      } else {
+        console.error('Bulk accept failed:', result.error);
+        alert('Failed to accept letters: ' + result.error);
+      }
+    } catch (error) {
+      console.error('Bulk accept error:', error);
+      alert('Failed to accept letters. Please try again.');
+    } finally {
+      setIsBulkLoading(false);
+    }
+  };
+
+  const handleBulkReject = async (letterIds: string[]) => {
+    const rejectionReason = prompt('Please provide a reason for rejection:');
+    if (!rejectionReason) return;
+
+    setIsBulkLoading(true);
+    try {
+      const response = await fetch('/api/letters/bulk-reject', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ letterIds, rejectionReason }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        // Refresh the page to show updated data
+        window.location.reload();
+      } else {
+        console.error('Bulk reject failed:', result.error);
+        alert('Failed to reject letters: ' + result.error);
+      }
+    } catch (error) {
+      console.error('Bulk reject error:', error);
+      alert('Failed to reject letters. Please try again.');
+    } finally {
+      setIsBulkLoading(false);
+    }
+  };
+
+  const handleBulkProcess = async (letterIds: string[]) => {
+    setIsBulkLoading(true);
+    try {
+      const response = await fetch('/api/letters/bulk-process', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ letterIds }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        // Refresh page to show updated data
+        window.location.reload();
+      } else {
+        console.error('Bulk process failed:', result.error);
+        alert('Failed to process letters: ' + result.error);
+      }
+    } catch (error) {
+      console.error('Bulk process error:', error);
+      alert('Failed to process letters. Please try again.');
+    } finally {
+      setIsBulkLoading(false);
+    }
+  };
+
+  const handleBulkForward = async (letterIds: string[], targetDepartment: string) => {
+    setIsBulkLoading(true);
+    try {
+      const response = await fetch('/api/letters/bulk-forward', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ letterIds, targetDepartment }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        // Refresh page to show updated data
+        window.location.reload();
+      } else {
+        console.error('Bulk forward failed:', result.error);
+        alert('Failed to forward letters: ' + result.error);
+      }
+    } catch (error) {
+      console.error('Bulk forward error:', error);
+      alert('Failed to forward letters. Please try again.');
+    } finally {
+      setIsBulkLoading(false);
+    }
+  };
+
+  const handleBulkForwardToDepartment = async (letterIds: string[], targetDepartment: string) => {
+    setIsBulkLoading(true);
+    try {
+      const response = await fetch('/api/letters/bulk-forward', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ letterIds, targetDepartment }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        // Refresh page to show updated data
+        window.location.reload();
+      } else {
+        console.error('Bulk forward failed:', result.error);
+        alert('Failed to forward letters: ' + result.error);
+      }
+    } catch (error) {
+      console.error('Bulk forward error:', error);
+      alert('Failed to forward letters. Please try again.');
+    } finally {
+      setIsBulkLoading(false);
+    }
   };
 
   return (
@@ -258,10 +404,18 @@ export function ImprovedBudgetDashboard({
 
         <div className="p-6">
           {filteredLetters.length > 0 ? (
-            <EnhancedLetterTable
+            <BulkLetterTable
               letters={filteredLetters}
               onRowClick={setSelectedLetter}
+              showDepartment={activeTab === 'incoming' ? false : true}
               emptyMessage={getEmptyMessage()}
+              showBulkActions={true}
+              bulkActionType={activeTab === 'incoming' ? 'accept-reject' : activeTab === 'processing' ? 'process' : 'forward-custom'}
+              onBulkAccept={activeTab === 'incoming' ? handleBulkAccept : undefined}
+              onBulkReject={activeTab === 'incoming' ? handleBulkReject : undefined}
+              onBulkProcess={activeTab === 'processing' ? handleBulkProcess : undefined}
+              onBulkForwardToDepartment={activeTab === 'processed' ? handleBulkForwardToDepartment : undefined}
+              isBulkLoading={isBulkLoading}
             />
           ) : getCurrentLetters().length > 0 ? (
             <EmptyState

@@ -18,6 +18,7 @@ export function ImprovedSecretaryDashboard({ letters }: ImprovedSecretaryDashboa
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState<string>('');
   const [selectedYear, setSelectedYear] = useState<string>('');
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   // Fetch letter details when a letter is selected
   useEffect(() => {
@@ -35,23 +36,38 @@ export function ImprovedSecretaryDashboard({ letters }: ImprovedSecretaryDashboa
     }
   }, [selectedLetter]);
 
-  // Filter letters by month and year
+  // Filter letters by month, year, and search query
   const filteredLetters = useMemo(() => {
-    if (!selectedMonth && !selectedYear) {
-      return letters;
+    let filtered = letters;
+
+    // Apply search filter
+    if (searchQuery) {
+      filtered = filtered.filter((letter) => {
+        const query = searchQuery.toLowerCase();
+        return (
+          letter.subject?.toLowerCase().includes(query) ||
+          letter.serial_number?.toLowerCase().includes(query) ||
+          letter.pv_id?.toLowerCase().includes(query)
+        );
+      });
     }
 
-    return letters.filter((letter) => {
-      const letterDate = new Date(letter.created_at);
-      const letterMonth = letterDate.getMonth() + 1; // 0-indexed, so add 1
-      const letterYear = letterDate.getFullYear();
+    // Apply date filters
+    if (selectedMonth || selectedYear) {
+      filtered = filtered.filter((letter) => {
+        const letterDate = new Date(letter.created_at);
+        const letterMonth = letterDate.getMonth() + 1; // 0-indexed, so add 1
+        const letterYear = letterDate.getFullYear();
 
-      const monthMatch = !selectedMonth || letterMonth.toString() === selectedMonth;
-      const yearMatch = !selectedYear || letterYear.toString() === selectedYear;
+        const monthMatch = !selectedMonth || letterMonth.toString() === selectedMonth;
+        const yearMatch = !selectedYear || letterYear.toString() === selectedYear;
 
-      return monthMatch && yearMatch;
-    });
-  }, [letters, selectedMonth, selectedYear]);
+        return monthMatch && yearMatch;
+      });
+    }
+
+    return filtered;
+  }, [letters, selectedMonth, selectedYear, searchQuery]);
 
   const createdLetters = letters.filter(l => l.status === 'created');
   const dispatchedLetters = letters.filter(l => l.status !== 'created');
@@ -175,10 +191,23 @@ export function ImprovedSecretaryDashboard({ letters }: ImprovedSecretaryDashboa
             />
           ) : (
             <div className="space-y-4">
-              {/* Date Filters */}
+              {/* Search and Date Filters */}
               <div className="flex items-center gap-3">
                 <div className="flex-1">
-                  {/* Search bar is already in EnhancedLetterTable */}
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                      </svg>
+                    </div>
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Search by subject, serial number, or PV number..."
+                      className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
+                  </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <select
@@ -211,9 +240,10 @@ export function ImprovedSecretaryDashboard({ letters }: ImprovedSecretaryDashboa
                     <option value="2024">2024</option>
                     <option value="2023">2023</option>
                   </select>
-                  {(selectedMonth || selectedYear) && (
+                  {(searchQuery || selectedMonth || selectedYear) && (
                     <button
                       onClick={() => {
+                        setSearchQuery('');
                         setSelectedMonth('');
                         setSelectedYear('');
                       }}
