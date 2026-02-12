@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
     const { data: updatedLetters, error: updateError } = await (supabase
       .from('letters') as any)
       .update({
-        status: 'received',
+        status: 'processing',
         current_department: userDepartment,
         updated_at: new Date().toISOString()
       })

@@ -6,23 +6,23 @@ interface DepartmentBadgeProps {
 }
 
 const departmentConfig: Record<Department, { label: string; className: string }> = {
-  Secretary: { label: 'Secretary', className: 'bg-slate-100 text-slate-700 border-slate-200' },
-  Budget: { label: 'Budget', className: 'bg-indigo-100 text-indigo-700 border-indigo-200' },
-  Payables: { label: 'Payables', className: 'bg-emerald-100 text-emerald-700 border-emerald-200' },
-  Payroll: { label: 'Payroll', className: 'bg-cyan-100 text-cyan-700 border-cyan-200' },
-  StudentSection: { label: 'Student Section', className: 'bg-amber-100 text-amber-700 border-amber-200' },
-  CashOffice: { label: 'Cash Office', className: 'bg-teal-100 text-teal-700 border-teal-200' },
-  FinalAccounts: { label: 'Final Accounts', className: 'bg-violet-100 text-violet-700 border-violet-200' },
-  Audit: { label: 'Audit', className: 'bg-rose-100 text-rose-700 border-rose-200' },
+  Secretary: { label: 'Secretary', className: 'bg-knust-gray-100 text-knust-gray-700 border-knust-gray-300' },
+  Budget: { label: 'Budget', className: 'bg-indigo-50 text-indigo-700 border-indigo-200' },
+  Payables: { label: 'Payables', className: 'bg-knust-green-50 text-knust-green-700 border-knust-green-200' },
+  Payroll: { label: 'Payroll', className: 'bg-cyan-50 text-cyan-700 border-cyan-200' },
+  StudentSection: { label: 'Student Section', className: 'bg-knust-yellow-100 text-knust-yellow-800 border-knust-yellow-300' },
+  CashOffice: { label: 'Cash Office', className: 'bg-teal-50 text-teal-700 border-teal-200' },
+  FinalAccounts: { label: 'Final Accounts', className: 'bg-violet-50 text-violet-700 border-violet-200' },
+  Audit: { label: 'Audit', className: 'bg-knust-red-50 text-knust-red-700 border-knust-red-200' },
 };
 
 export function DepartmentBadge({ department, size = 'md' }: DepartmentBadgeProps) {
   const config = departmentConfig[department];
-  const sizeClasses = size === 'sm' ? 'px-2 py-0.5 text-xs' : 'px-2.5 py-0.5 text-xs';
+  const sizeClasses = size === 'sm' ? 'px-2 py-0.5 text-xs' : 'px-2.5 py-1 text-xs';
 
   return (
     <span
-      className={`inline-flex items-center font-medium rounded border ${config.className} ${sizeClasses}`}
+      className={`inline-flex items-center font-semibold rounded-md border uppercase tracking-wide ${config.className} ${sizeClasses}`}
     >
       {config.label}
     </span>

@@ -47,6 +47,14 @@ export async function POST(request: NextRequest) {
 
     const fromDepartment = userData.department;
 
+    // Prevent forwarding to the same department
+    if (targetDepartment === fromDepartment) {
+      return NextResponse.json(
+        { error: 'Cannot forward letters to the same department' },
+        { status: 400 }
+      );
+    }
+
     // Update all letters in bulk
     const { data: updatedLetters, error: updateError } = await (supabase
       .from('letters') as any)

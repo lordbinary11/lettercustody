@@ -11,9 +11,9 @@ export function LetterCard({ letter, children }: LetterCardProps) {
     <div className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
       <div className="flex justify-between items-start mb-4">
         <div className="flex-1">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 mb-1">
             <h3 className="text-lg font-semibold text-gray-900">
-              {letter.serial_number || 'No Serial Number'}
+              {letter.subject}
             </h3>
             {letter.is_archived && (
               <span className="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded">
@@ -21,7 +21,7 @@ export function LetterCard({ letter, children }: LetterCardProps) {
               </span>
             )}
           </div>
-          <p className="text-sm text-gray-600 mt-1">{letter.subject}</p>
+          <p className="text-sm text-gray-600">{letter.serial_number || 'No Serial Number'}</p>
         </div>
         <span className={`px-3 py-1 rounded-full text-xs font-medium ${LETTER_STATUS_COLORS[letter.status]}`}>
           {LETTER_STATUS_LABELS[letter.status]}

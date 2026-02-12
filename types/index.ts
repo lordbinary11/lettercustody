@@ -1,8 +1,7 @@
 export type LetterStatus = 
-  | 'created'
+  | 'new'
   | 'dispatched'
   | 'forwarded'
-  | 'received'
   | 'processing'
   | 'processed'
   | 'rejected'

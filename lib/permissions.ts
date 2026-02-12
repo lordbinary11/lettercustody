@@ -6,7 +6,7 @@ export function canCreateLetter(user: Profile): boolean {
 
 export function canDispatchLetter(user: Profile, letter: Letter): boolean {
   if (user.role === 'secretary' && letter.created_by === user.id) {
-    return letter.status === 'created' || letter.status === 'rejected';
+    return letter.status === 'new' || letter.status === 'rejected';
   }
   return false;
 }
@@ -25,7 +25,7 @@ export function canRejectLetter(user: Profile, letter: Letter): boolean {
 export function canAddNote(user: Profile, letter: Letter): boolean {
   return (
     user.department === letter.current_department &&
-    (letter.status === 'processing' || letter.status === 'received')
+    (letter.status === 'processing')
   );
 }
 
@@ -41,7 +41,7 @@ export function canAttachPV(user: Profile, letter: Letter): boolean {
     user.role === 'payables_user' &&
     user.department === 'Payables' &&
     letter.current_department === 'Payables' &&
-    (letter.status === 'processing' || letter.status === 'received')
+    (letter.status === 'processing')
   );
 }
 

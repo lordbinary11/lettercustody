@@ -72,8 +72,8 @@ export function ImprovedSecretaryDashboard({ letters }: ImprovedSecretaryDashboa
     return filtered;
   }, [letters, selectedMonth, selectedYear, searchQuery]);
 
-  const createdLetters = letters.filter(l => l.status === 'created');
-  const dispatchedLetters = letters.filter(l => l.status !== 'created');
+  const createdLetters = letters.filter(l => l.status === 'new' || (l.status as string) === 'created');
+  const dispatchedLetters = letters.filter(l => l.status !== 'new' && (l.status as string) !== 'created');
 
   const handleBulkDispatch = async (letterIds: string[], targetDepartment: string) => {
     setIsBulkLoading(true);
@@ -107,42 +107,42 @@ export function ImprovedSecretaryDashboard({ letters }: ImprovedSecretaryDashboa
     <div className="space-y-6">
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
+        <div className="bg-white rounded-xl border border-knust-gray-200 p-6 shadow-card">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">Total Letters</p>
-              <p className="text-3xl font-bold text-gray-900 mt-1">{letters.length}</p>
+              <p className="text-sm font-medium text-knust-gray-500 uppercase tracking-wide">Total Letters</p>
+              <p className="text-3xl font-bold text-knust-black mt-1">{letters.length}</p>
             </div>
-            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-              <svg className="w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="w-12 h-12 bg-knust-green-50 rounded-xl flex items-center justify-center">
+              <svg className="w-6 h-6 text-knust-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
+        <div className="bg-white rounded-xl border border-knust-gray-200 p-6 shadow-card">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">Awaiting Dispatch</p>
-              <p className="text-3xl font-bold text-gray-900 mt-1">{createdLetters.length}</p>
+              <p className="text-sm font-medium text-knust-gray-500 uppercase tracking-wide">Awaiting Dispatch</p>
+              <p className="text-3xl font-bold text-knust-black mt-1">{createdLetters.length}</p>
             </div>
-            <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
-              <svg className="w-6 h-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="w-12 h-12 bg-knust-yellow-100 rounded-xl flex items-center justify-center">
+              <svg className="w-6 h-6 text-knust-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
+        <div className="bg-white rounded-xl border border-knust-gray-200 p-6 shadow-card">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">In Progress</p>
-              <p className="text-3xl font-bold text-gray-900 mt-1">{dispatchedLetters.length}</p>
+              <p className="text-sm font-medium text-knust-gray-500 uppercase tracking-wide">In Progress</p>
+              <p className="text-3xl font-bold text-knust-black mt-1">{dispatchedLetters.length}</p>
             </div>
-            <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-              <svg className="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="w-12 h-12 bg-knust-green-50 rounded-xl flex items-center justify-center">
+              <svg className="w-6 h-6 text-knust-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
@@ -151,15 +151,15 @@ export function ImprovedSecretaryDashboard({ letters }: ImprovedSecretaryDashboa
       </div>
 
       {/* Create Letter Section */}
-      <div className="bg-white rounded-lg border border-gray-200 shadow-sm">
-        <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+      <div className="bg-white rounded-xl border border-knust-gray-200 shadow-card">
+        <div className="px-6 py-4 border-b border-knust-gray-200 flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-semibold text-gray-900">Create New Letter</h2>
-            <p className="text-sm text-gray-500 mt-1">Fill in the details to create and dispatch a letter</p>
+            <h2 className="text-lg font-semibold text-knust-black">Create New Letter</h2>
+            <p className="text-sm text-knust-gray-500 mt-1">Fill in the details to create and dispatch a letter</p>
           </div>
           <button
             onClick={() => setShowCreateForm(!showCreateForm)}
-            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
+            className="px-4 py-2.5 bg-knust-green-500 hover:bg-knust-green-700 text-white font-medium rounded-lg transition-colors shadow-sm"
           >
             {showCreateForm ? 'Hide Form' : '+ New Letter'}
           </button>
@@ -172,22 +172,22 @@ export function ImprovedSecretaryDashboard({ letters }: ImprovedSecretaryDashboa
       </div>
 
       {/* Letters Tabs */}
-      <div className="bg-white rounded-lg border border-gray-200 shadow-sm">
-        <div className="border-b border-gray-200">
+      <div className="bg-white rounded-xl border border-knust-gray-200 shadow-card">
+        <div className="border-b border-knust-gray-200">
           <nav className="flex -mb-px">
             <button
               onClick={() => setActiveTab('all')}
               className={`flex-1 py-4 px-6 text-center border-b-2 font-medium text-sm transition-colors ${
                 activeTab === 'all'
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-knust-green-500 text-knust-green-600'
+                  : 'border-transparent text-knust-gray-500 hover:text-knust-gray-700 hover:border-knust-gray-300'
               }`}
             >
               All Letters
               <span className={`ml-2 px-2 py-0.5 rounded-full text-xs ${
                 activeTab === 'all'
-                  ? 'bg-blue-100 text-blue-600'
-                  : 'bg-gray-100 text-gray-600'
+                  ? 'bg-knust-green-100 text-knust-green-600'
+                  : 'bg-knust-gray-100 text-knust-gray-600'
               }`}>
                 {letters.length}
               </span>
@@ -196,15 +196,15 @@ export function ImprovedSecretaryDashboard({ letters }: ImprovedSecretaryDashboa
               onClick={() => setActiveTab('awaiting')}
               className={`flex-1 py-4 px-6 text-center border-b-2 font-medium text-sm transition-colors ${
                 activeTab === 'awaiting'
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-knust-green-500 text-knust-green-600'
+                  : 'border-transparent text-knust-gray-500 hover:text-knust-gray-700 hover:border-knust-gray-300'
               }`}
             >
               Awaiting Dispatch
               <span className={`ml-2 px-2 py-0.5 rounded-full text-xs ${
                 activeTab === 'awaiting'
-                  ? 'bg-blue-100 text-blue-600'
-                  : 'bg-gray-100 text-gray-600'
+                  ? 'bg-knust-green-100 text-knust-green-600'
+                  : 'bg-knust-gray-100 text-knust-gray-600'
               }`}>
                 {createdLetters.length}
               </span>
@@ -309,7 +309,7 @@ export function ImprovedSecretaryDashboard({ letters }: ImprovedSecretaryDashboa
           isOpen={!!selectedLetter}
           onClose={() => setSelectedLetter(null)}
           actions={
-            selectedLetter.status === 'created' ? (
+            selectedLetter.status === 'new' || (selectedLetter.status as string) === 'created' ? (
               <DispatchLetterActions letterId={selectedLetter.id} onSuccess={() => setSelectedLetter(null)} />
             ) : (
               <div className="text-sm text-gray-500">

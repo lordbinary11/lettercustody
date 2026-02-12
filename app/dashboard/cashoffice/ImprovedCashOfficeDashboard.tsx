@@ -271,32 +271,32 @@ export function ImprovedCashOfficeDashboard({
     <div className="space-y-6">
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
+        <div className="bg-white rounded-xl border border-knust-gray-200 p-6 shadow-card">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">Total Letters</p>
-              <p className="text-3xl font-bold text-gray-900 mt-1">{totalLetters}</p>
+              <p className="text-sm font-medium text-knust-gray-500 uppercase tracking-wide">Total Letters</p>
+              <p className="text-3xl font-bold text-knust-black mt-1">{totalLetters}</p>
             </div>
-            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-              <svg className="w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="w-12 h-12 bg-knust-green-50 rounded-xl flex items-center justify-center">
+              <svg className="w-6 h-6 text-knust-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
+        <div className="bg-white rounded-xl border border-knust-gray-200 p-6 shadow-card">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">Incoming</p>
-              <p className="text-3xl font-bold text-gray-900 mt-1">{incomingLetters.length}</p>
+              <p className="text-sm font-medium text-knust-gray-500 uppercase tracking-wide">Incoming</p>
+              <p className="text-3xl font-bold text-knust-black mt-1">{incomingLetters.length}</p>
               {getActionRequired() && (
-                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800 mt-2">
+                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-knust-green-100 text-knust-green-700 mt-2">
                   Action Required
                 </span>
               )}
             </div>
-            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+            <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center">
               <svg className="w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
               </svg>
@@ -304,28 +304,28 @@ export function ImprovedCashOfficeDashboard({
           </div>
         </div>
 
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
+        <div className="bg-white rounded-xl border border-knust-gray-200 p-6 shadow-card">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">Processing</p>
-              <p className="text-3xl font-bold text-gray-900 mt-1">{processingLetters.length}</p>
+              <p className="text-sm font-medium text-knust-gray-500 uppercase tracking-wide">Processing</p>
+              <p className="text-3xl font-bold text-knust-black mt-1">{processingLetters.length}</p>
             </div>
-            <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
-              <svg className="w-6 h-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="w-12 h-12 bg-knust-yellow-100 rounded-xl flex items-center justify-center">
+              <svg className="w-6 h-6 text-knust-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
+        <div className="bg-white rounded-xl border border-knust-gray-200 p-6 shadow-card">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">Processed</p>
-              <p className="text-3xl font-bold text-gray-900 mt-1">{processedLetters.length}</p>
+              <p className="text-sm font-medium text-knust-gray-500 uppercase tracking-wide">Processed</p>
+              <p className="text-3xl font-bold text-knust-black mt-1">{processedLetters.length}</p>
             </div>
-            <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-              <svg className="w-6 h-6 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="w-12 h-12 bg-knust-green-50 rounded-xl flex items-center justify-center">
+              <svg className="w-6 h-6 text-knust-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
@@ -334,8 +334,8 @@ export function ImprovedCashOfficeDashboard({
       </div>
 
       {/* Tabs */}
-      <div className="bg-white rounded-lg border border-gray-200 shadow-sm">
-        <div className="border-b border-gray-200">
+      <div className="bg-white rounded-xl border border-knust-gray-200 shadow-card">
+        <div className="border-b border-knust-gray-200">
           <nav className="flex -mb-px">
             {tabs.map((tab) => (
               <button
@@ -343,15 +343,15 @@ export function ImprovedCashOfficeDashboard({
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex-1 py-4 px-6 text-center border-b-2 font-medium text-sm transition-colors ${
                   activeTab === tab.id
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    ? 'border-knust-green-500 text-knust-green-600'
+                    : 'border-transparent text-knust-gray-500 hover:text-knust-gray-700 hover:border-knust-gray-300'
                 }`}
               >
                 {tab.label}
                 <span className={`ml-2 px-2 py-0.5 rounded-full text-xs ${
                   activeTab === tab.id
-                    ? 'bg-blue-100 text-blue-600'
-                    : 'bg-gray-100 text-gray-600'
+                    ? 'bg-knust-green-100 text-knust-green-600'
+                    : 'bg-knust-gray-100 text-knust-gray-600'
                 }`}>
                   {tab.count}
                 </span>
@@ -360,7 +360,7 @@ export function ImprovedCashOfficeDashboard({
           </nav>
         </div>
 
-        <div className="px-6 py-4 border-b border-gray-200">
+        <div className="px-6 py-4 border-b border-knust-gray-200">
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1">
               <div className="relative">
@@ -369,9 +369,9 @@ export function ImprovedCashOfficeDashboard({
                   placeholder="Search by serial number, subject, or PV number..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+                  className="w-full pl-10 pr-4 py-2.5 border border-knust-gray-300 rounded-lg focus:ring-2 focus:ring-knust-green-500 focus:border-knust-green-500 text-knust-black"
                 />
-                <svg className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="absolute left-3 top-3 h-5 w-5 text-knust-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </div>
@@ -380,7 +380,7 @@ export function ImprovedCashOfficeDashboard({
               <select
                 value={selectedMonth}
                 onChange={(e) => setSelectedMonth(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+                className="px-4 py-2.5 border border-knust-gray-300 rounded-lg focus:ring-2 focus:ring-knust-green-500 focus:border-knust-green-500 text-knust-black"
               >
                 <option value="">All Months</option>
                 {months.map(month => (
@@ -390,7 +390,7 @@ export function ImprovedCashOfficeDashboard({
               <select
                 value={selectedYear}
                 onChange={(e) => setSelectedYear(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+                className="px-4 py-2.5 border border-knust-gray-300 rounded-lg focus:ring-2 focus:ring-knust-green-500 focus:border-knust-green-500 text-knust-black"
               >
                 <option value="">All Years</option>
                 {availableYears.map(year => (
@@ -463,7 +463,7 @@ export function ImprovedCashOfficeDashboard({
                   onSuccess={() => setSelectedLetter(null)}
                 />
               </div>
-            ) : selectedLetter.status === 'processing' || selectedLetter.status === 'received' ? (
+            ) : selectedLetter.status === 'processing' || (selectedLetter.status as string) === 'received' ? (
               <ProcessingLetterActions letterId={selectedLetter.id} onSuccess={() => setSelectedLetter(null)} />
             ) : selectedLetter.status === 'processed' ? (
               <ProcessedLetterActions letterId={selectedLetter.id} onSuccess={() => setSelectedLetter(null)} />

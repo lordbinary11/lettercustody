@@ -51,7 +51,7 @@ export function CreateLetterForm() {
           type="text"
           id="serial_number"
           name="serial_number"
-          placeholder="e.g., LTR-2026-001"
+          placeholder="e.g., LTR-2026-001 or any format"
           className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-black"
         />
       </div>
@@ -131,12 +131,10 @@ export function CreateLetterForm() {
           Amount (GH₵)
         </label>
         <input
-          type="number"
+          type="text"
           id="amount"
           name="amount"
-          step="0.01"
-          min="0"
-          placeholder="0.00"
+          placeholder="0.00 or any amount format"
           className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
         />
       </div>
@@ -146,7 +144,7 @@ export function CreateLetterForm() {
         <button
           type="submit"
           disabled={loading}
-          className="flex-1 px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white font-medium rounded-lg transition-colors"
+          className="flex-1 px-6 py-3 bg-knust-green-600 hover:bg-knust-green-700 disabled:bg-knust-green-300 text-white font-medium rounded-lg transition-colors"
         >
           {loading ? 'Creating...' : 'Create Letter'}
         </button>

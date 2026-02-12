@@ -197,15 +197,15 @@ export function BulkLetterTable({
     <div className="space-y-4">
       {/* Bulk Actions Bar */}
       {showBulkActions && selectedLetters.size > 0 && (
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <div className="bg-knust-green-50 border border-knust-green-200 rounded-xl p-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <span className="text-sm font-medium text-blue-900">
+              <span className="text-sm font-semibold text-knust-green-800">
                 {selectedLetters.size} letter{selectedLetters.size !== 1 ? 's' : ''} selected
               </span>
               <button
                 onClick={() => setSelectedLetters(new Set())}
-                className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+                className="text-sm text-knust-green-600 hover:text-knust-green-800 font-medium"
               >
                 Clear selection
               </button>
@@ -216,14 +216,14 @@ export function BulkLetterTable({
                   <button
                     onClick={handleBulkAccept}
                     disabled={isBulkLoading}
-                    className="px-4 py-2 bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white font-medium rounded-lg transition-colors text-sm"
+                    className="px-4 py-2.5 bg-knust-green-500 hover:bg-knust-green-700 disabled:bg-knust-gray-400 text-white font-medium rounded-lg transition-colors text-sm shadow-sm"
                   >
                     {isBulkLoading ? 'Processing...' : `Accept All (${selectedLetters.size})`}
                   </button>
                   <button
                     onClick={handleBulkReject}
                     disabled={isBulkLoading}
-                    className="px-4 py-2 bg-red-600 hover:bg-red-700 disabled:bg-gray-400 text-white font-medium rounded-lg transition-colors text-sm"
+                    className="px-4 py-2.5 bg-knust-red-500 hover:bg-knust-red-700 disabled:bg-knust-gray-400 text-white font-medium rounded-lg transition-colors text-sm shadow-sm"
                   >
                     {isBulkLoading ? 'Processing...' : `Reject All (${selectedLetters.size})`}
                   </button>
@@ -234,7 +234,7 @@ export function BulkLetterTable({
                   <button
                     onClick={handleBulkProcess}
                     disabled={isBulkLoading}
-                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-medium rounded-lg transition-colors text-sm"
+                    className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-knust-gray-400 text-white font-medium rounded-lg transition-colors text-sm shadow-sm"
                   >
                     {isBulkLoading ? 'Processing...' : `Mark Processed (${selectedLetters.size})`}
                   </button>
@@ -244,7 +244,7 @@ export function BulkLetterTable({
                 <button
                   onClick={handleBulkForward}
                   disabled={isBulkLoading}
-                  className="px-4 py-2 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-400 text-white font-medium rounded-lg transition-colors text-sm"
+                  className="px-4 py-2.5 bg-knust-green-500 hover:bg-knust-green-700 disabled:bg-knust-gray-400 text-white font-medium rounded-lg transition-colors text-sm shadow-sm"
                 >
                   {isBulkLoading ? 'Processing...' : `Forward All (${selectedLetters.size})`}
                 </button>
@@ -267,17 +267,17 @@ export function BulkLetterTable({
 
       {/* Table */}
       {filteredAndSortedLetters.length === 0 ? (
-        <div className="bg-white rounded-lg border border-gray-200 p-12 text-center">
-          <svg className="w-12 h-12 mx-auto text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div className="bg-white rounded-xl border border-knust-gray-200 p-12 text-center">
+          <svg className="w-12 h-12 mx-auto text-knust-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
           </svg>
-          <p className="text-gray-500">{emptyMessage}</p>
+          <p className="text-knust-gray-500">{emptyMessage}</p>
         </div>
       ) : (
-        <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+        <div className="bg-white rounded-xl border border-knust-gray-200 shadow-card overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-50 border-b border-gray-200">
+              <thead className="bg-knust-gray-50 border-b border-knust-gray-200">
                 <tr>
                   {showBulkActions && (
                     <th className="px-6 py-3 text-left">
@@ -296,7 +296,7 @@ export function BulkLetterTable({
                   )}
                   <th 
                     onClick={() => handleSort('serial_number')}
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
+                    className="px-6 py-3 text-left text-xs font-semibold text-knust-gray-600 uppercase tracking-wider cursor-pointer hover:bg-knust-gray-100 transition-colors"
                   >
                     <div className="flex items-center gap-2">
                       Serial No.
@@ -304,12 +304,12 @@ export function BulkLetterTable({
                     </div>
                   </th>
                   <th 
-                    onClick={() => handleSort('subject')}
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
+                    onClick={() => handleSort('status')}
+                    className="px-6 py-3 text-left text-xs font-semibold text-knust-gray-600 uppercase tracking-wider cursor-pointer hover:bg-knust-gray-100 transition-colors"
                   >
                     <div className="flex items-center gap-2">
-                      Subject
-                      <SortIcon field="subject" />
+                      Status
+                      <SortIcon field="status" />
                     </div>
                   </th>
                   {showDepartment && (
@@ -319,7 +319,7 @@ export function BulkLetterTable({
                   )}
                   <th 
                     onClick={() => handleSort('amount')}
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
+                    className="px-6 py-3 text-left text-xs font-semibold text-knust-gray-600 uppercase tracking-wider cursor-pointer hover:bg-knust-gray-100 transition-colors"
                   >
                     <div className="flex items-center gap-2">
                       Amount
@@ -331,7 +331,7 @@ export function BulkLetterTable({
                   </th>
                   <th 
                     onClick={() => handleSort('updated_at')}
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
+                    className="px-6 py-3 text-left text-xs font-semibold text-knust-gray-600 uppercase tracking-wider cursor-pointer hover:bg-knust-gray-100 transition-colors"
                   >
                     <div className="flex items-center gap-2">
                       Last Updated
@@ -362,8 +362,8 @@ export function BulkLetterTable({
                     )}
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex flex-col">
-                        <span className="font-medium text-gray-900 truncate max-w-xs">{letter.subject}</span>
-                        <span className="text-sm text-gray-500">{letter.serial_number || 'No Serial'}</span>
+                        <span className="font-medium text-knust-black truncate max-w-xs">{letter.subject}</span>
+                        <span className="text-sm text-knust-gray-500 truncate max-w-xs">{letter.serial_number || 'No Serial'}</span>
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">

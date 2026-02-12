@@ -92,19 +92,19 @@ export function LetterDetailPanel({
 
   return (
     <div className="fixed inset-0 z-50 overflow-hidden">
-      <div className="absolute inset-0 bg-black/50" onClick={onClose} />
+      <div className="absolute inset-0 bg-knust-black/50" onClick={onClose} />
       
       <div className="absolute right-0 top-0 h-full w-full max-w-2xl bg-white shadow-xl">
         <div className="flex flex-col h-full">
           {/* Header */}
-          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-knust-gray-200 bg-knust-gray-50">
             <div className="flex items-center gap-3">
-              <h2 className="text-lg font-semibold text-gray-900">Letter Details</h2>
+              <h2 className="text-lg font-semibold text-knust-black">Letter Details</h2>
               <StatusBadge status={letter.status} size="sm" />
             </div>
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-600 transition-colors"
+              className="text-knust-gray-400 hover:text-knust-gray-600 transition-colors"
             >
               <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -117,7 +117,7 @@ export function LetterDetailPanel({
             {/* Subject */}
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-2xl font-bold text-gray-900">
+                <span className="text-2xl font-bold text-knust-black">
                   {letter.subject}
                 </span>
               </div>
@@ -125,64 +125,63 @@ export function LetterDetailPanel({
 
             {/* Serial Number & ID */}
             <div>
-              <h3 className="text-sm font-medium text-gray-700 mb-2">Serial Number</h3>
-              <p className="text-sm text-gray-900">{letter.serial_number || 'No Serial Number'}</p>
-              <p className="text-xs text-gray-500 font-mono mt-1">{letter.id}</p>
+              <h3 className="text-sm font-semibold text-knust-gray-600 uppercase tracking-wide mb-2">Serial Number</h3>
+              <p className="text-sm text-knust-black">{letter.serial_number || 'No Serial Number'}</p>
             </div>
 
             {/* Metadata Grid */}
             <div className="grid grid-cols-2 gap-4">
               {letter.amount && (
                 <div>
-                  <p className="text-sm text-gray-500">Amount</p>
-                  <p className="text-base font-medium text-gray-900">
+                  <p className="text-sm text-knust-gray-500">Amount</p>
+                  <p className="text-base font-semibold text-knust-black">
                     GH₵ {letter.amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                   </p>
                 </div>
               )}
               {letter.pv_id && (
                 <div>
-                  <p className="text-sm text-gray-500">PV Number</p>
-                  <p className="text-base font-medium text-gray-900">{letter.pv_id}</p>
+                  <p className="text-sm text-knust-gray-500">PV Number</p>
+                  <p className="text-base font-semibold text-knust-black">{letter.pv_id}</p>
                 </div>
               )}
               <div>
-                <h3 className="text-xs font-medium text-gray-500 mb-1">Date Generated</h3>
-                <p className="text-sm text-gray-900">{formatDate(letter.date_generated)}</p>
+                <h3 className="text-xs font-medium text-knust-gray-500 mb-1">Date Generated</h3>
+                <p className="text-sm text-knust-black">{formatDate(letter.date_generated)}</p>
               </div>
               <div>
-                <h3 className="text-xs font-medium text-gray-500 mb-1">Date Minuted</h3>
-                <p className="text-sm text-gray-900">{formatDate(letter.date_minuted)}</p>
+                <h3 className="text-xs font-medium text-knust-gray-500 mb-1">Date Minuted</h3>
+                <p className="text-sm text-knust-black">{formatDate(letter.date_minuted)}</p>
               </div>
               <div>
-                <h3 className="text-xs font-medium text-gray-500 mb-1">Date Received</h3>
-                <p className="text-sm text-gray-900">{formatDate(letter.date_received)}</p>
+                <h3 className="text-xs font-medium text-knust-gray-500 mb-1">Date Received</h3>
+                <p className="text-sm text-knust-black">{formatDate(letter.date_received)}</p>
               </div>
               <div>
-                <h3 className="text-xs font-medium text-gray-500 mb-1">Dispatch Date</h3>
-                <p className="text-sm text-gray-900">{formatDate(letter.dispatch_date)}</p>
+                <h3 className="text-xs font-medium text-knust-gray-500 mb-1">Dispatch Date</h3>
+                <p className="text-sm text-knust-black">{formatDate(letter.dispatch_date)}</p>
               </div>
             </div>
 
             {/* Dispatch History - Full Movement Trail */}
             {loadingMovements ? (
-              <div className="border-t border-gray-200 pt-6">
-                <div className="text-sm text-gray-500 text-center">Loading dispatch history...</div>
+              <div className="border-t border-knust-gray-200 pt-6">
+                <div className="text-sm text-knust-gray-500 text-center">Loading dispatch history...</div>
               </div>
             ) : allMovements.length > 0 && (
-              <div className="border-t border-gray-200 pt-6">
-                <h3 className="text-sm font-medium text-gray-900 mb-3">Dispatch History</h3>
+              <div className="border-t border-knust-gray-200 pt-6">
+                <h3 className="text-sm font-semibold text-knust-black mb-3">Dispatch History</h3>
                 <div className="space-y-3">
                   {allMovements.map((movement, index) => (
                     <div key={movement.id} className="flex gap-3">
                       <div className="flex flex-col items-center">
                         <div className={`w-2 h-2 rounded-full ${
-                          movement.status === 'received' ? 'bg-green-500' :
-                          movement.status === 'rejected' ? 'bg-red-500' :
+                          movement.status === 'received' ? 'bg-knust-green-500' :
+                          movement.status === 'rejected' ? 'bg-knust-red-500' :
                           'bg-blue-500'
                         }`} />
                         {index < allMovements.length - 1 && (
-                          <div className="w-0.5 h-12 bg-gray-200 mt-1" />
+                          <div className="w-0.5 h-12 bg-knust-gray-200 mt-1" />
                         )}
                       </div>
                       <div className="flex-1 pb-4">
@@ -190,26 +189,26 @@ export function LetterDetailPanel({
                           {movement.from_department && (
                             <>
                               <DepartmentBadge department={movement.from_department} size="sm" />
-                              <span className="text-gray-400">→</span>
+                              <span className="text-knust-gray-400">→</span>
                             </>
                           )}
                           <DepartmentBadge department={movement.to_department} size="sm" />
                           <span className={`text-xs font-medium ${
-                            movement.status === 'received' ? 'text-green-600' :
-                            movement.status === 'rejected' ? 'text-red-600' :
+                            movement.status === 'received' ? 'text-knust-green-600' :
+                            movement.status === 'rejected' ? 'text-knust-red-600' :
                             'text-blue-600'
                           }`}>
                             {movement.status.charAt(0).toUpperCase() + movement.status.slice(1)}
                           </span>
                         </div>
-                        <div className="text-xs text-gray-500 space-y-0.5">
+                        <div className="text-xs text-knust-gray-500 space-y-0.5">
                           <p>Dispatched: {formatDateTime(movement.dispatched_at)}</p>
                           {movement.received_at && (
                             <p>Received: {formatDateTime(movement.received_at)}</p>
                           )}
                         </div>
                         {movement.rejection_reason && (
-                          <p className="text-xs text-red-600 mt-1 italic">
+                          <p className="text-xs text-knust-red-600 mt-1 italic">
                             Reason: {movement.rejection_reason}
                           </p>
                         )}
@@ -222,22 +221,22 @@ export function LetterDetailPanel({
 
             {/* Processing Notes */}
             {loadingNotes ? (
-              <div className="border-t border-gray-200 pt-6">
-                <div className="text-sm text-gray-500 text-center">Loading notes...</div>
+              <div className="border-t border-knust-gray-200 pt-6">
+                <div className="text-sm text-knust-gray-500 text-center">Loading notes...</div>
               </div>
             ) : notes.length > 0 ? (
-              <div className="border-t border-gray-200 pt-6">
-                <h3 className="text-sm font-medium text-gray-900 mb-3">Processing Notes</h3>
+              <div className="border-t border-knust-gray-200 pt-6">
+                <h3 className="text-sm font-semibold text-knust-black mb-3">Processing Notes</h3>
                 <div className="space-y-2">
                   {notes.map((note) => (
-                    <div key={note.id} className="bg-blue-50 rounded-lg p-3 border border-blue-200">
+                    <div key={note.id} className="bg-knust-gray-50 rounded-xl p-3 border border-knust-gray-200">
                       <div className="flex items-start justify-between mb-2">
                         <DepartmentBadge department={note.department} size="sm" />
-                        <span className="text-xs text-gray-500">
+                        <span className="text-xs text-knust-gray-500">
                           {formatDateTime(note.created_at)}
                         </span>
                       </div>
-                      <p className="text-sm text-gray-900 whitespace-pre-wrap">{note.note}</p>
+                      <p className="text-sm text-knust-black whitespace-pre-wrap">{note.note}</p>
                     </div>
                   ))}
                 </div>
@@ -245,15 +244,15 @@ export function LetterDetailPanel({
             ) : null}
 
             {/* Timestamps */}
-            <div className="pt-4 border-t border-gray-200">
+            <div className="pt-4 border-t border-knust-gray-200">
               <div className="grid grid-cols-2 gap-4 text-xs">
                 <div>
-                  <span className="text-gray-500">Created:</span>
-                  <p className="text-gray-900 mt-0.5">{formatDateTime(letter.created_at)}</p>
+                  <span className="text-knust-gray-500">Created:</span>
+                  <p className="text-knust-black mt-0.5">{formatDateTime(letter.created_at)}</p>
                 </div>
                 <div>
-                  <span className="text-gray-500">Last Updated:</span>
-                  <p className="text-gray-900 mt-0.5">{formatDateTime(letter.updated_at)}</p>
+                  <span className="text-knust-gray-500">Last Updated:</span>
+                  <p className="text-knust-black mt-0.5">{formatDateTime(letter.updated_at)}</p>
                 </div>
               </div>
             </div>
@@ -261,7 +260,7 @@ export function LetterDetailPanel({
 
           {/* Actions Footer */}
           {actions && (
-            <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
+            <div className="px-6 py-4 border-t border-knust-gray-200 bg-knust-gray-50">
               {actions}
             </div>
           )}

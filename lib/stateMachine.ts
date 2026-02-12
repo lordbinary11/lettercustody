@@ -8,16 +8,15 @@ export type StateTransition = {
 };
 
 export const VALID_TRANSITIONS: StateTransition[] = [
-  { from: 'created', to: 'dispatched', action: 'dispatch', requiresCustody: false },
-  { from: 'dispatched', to: 'received', action: 'receive', requiresCustody: true },
+  { from: 'new', to: 'dispatched', action: 'dispatch', requiresCustody: false },
+  { from: 'dispatched', to: 'processing', action: 'accept', requiresCustody: true },
   { from: 'dispatched', to: 'rejected', action: 'reject', requiresCustody: true },
-  { from: 'forwarded', to: 'received', action: 'receive', requiresCustody: true },
+  { from: 'forwarded', to: 'processing', action: 'accept', requiresCustody: true },
   { from: 'forwarded', to: 'rejected', action: 'reject', requiresCustody: true },
-  { from: 'received', to: 'processing', action: 'start_processing', requiresCustody: true },
   { from: 'processing', to: 'processed', action: 'complete_processing', requiresCustody: true },
   { from: 'processed', to: 'forwarded', action: 'forward', requiresCustody: true },
   { from: 'processed', to: 'archived', action: 'archive', requiresCustody: true },
-  { from: 'rejected', to: 'created', action: 'return_to_secretary', requiresCustody: false },
+  { from: 'rejected', to: 'new', action: 'return_to_secretary', requiresCustody: false },
 ];
 
 export function isValidTransition(from: LetterStatus, to: LetterStatus): boolean {
@@ -92,10 +91,9 @@ export function validateCustody(
 }
 
 export const LETTER_STATUS_LABELS: Record<LetterStatus, string> = {
-  created: 'Created',
+  new: 'New',
   dispatched: 'Dispatched',
   forwarded: 'Forwarded',
-  received: 'Received',
   processing: 'Processing',
   processed: 'Processed',
   rejected: 'Rejected',
@@ -103,10 +101,9 @@ export const LETTER_STATUS_LABELS: Record<LetterStatus, string> = {
 };
 
 export const LETTER_STATUS_COLORS: Record<LetterStatus, string> = {
-  created: 'bg-gray-100 text-gray-800',
+  new: 'bg-gray-100 text-gray-800',
   dispatched: 'bg-blue-100 text-blue-800',
   forwarded: 'bg-indigo-100 text-indigo-800',
-  received: 'bg-yellow-100 text-yellow-800',
   processing: 'bg-purple-100 text-purple-800',
   processed: 'bg-green-100 text-green-800',
   rejected: 'bg-red-100 text-red-800',

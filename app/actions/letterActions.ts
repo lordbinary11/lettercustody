@@ -57,7 +57,7 @@ export async function createLetter(
       subject: formData.get('subject'),
       date_generated: dateGenerated?.trim() || undefined,
       date_minuted: dateMinuted?.trim() || undefined,
-      amount: amountStr?.trim() ? parseFloat(amountStr) : null,
+      amount: amountStr?.trim() || null,
     };
 
     const validated = CreateLetterSchema.parse(rawData);
@@ -84,7 +84,7 @@ export async function createLetter(
         date_generated: validated.date_generated,
         date_minuted: validated.date_minuted,
         amount: validated.amount,
-        status: 'created',
+        status: 'new',
         created_by: user.id,
       })
       .select()
@@ -182,8 +182,8 @@ export async function receiveLetter(
       return { success: false, error: 'Unauthorized: Cannot receive this letter' };
     }
 
-    validateStateTransition(letter.status, 'received', 'receive');
-    validateCustody(letter.current_department, user.department, 'receive');
+    validateStateTransition(letter.status, 'processing', 'accept');
+    validateCustody(letter.current_department, user.department, 'accept');
 
     const supabase = await createClient();
 
@@ -444,6 +444,11 @@ export async function forwardLetter(
 
     if (!canForwardLetter(user, letter)) {
       return { success: false, error: 'Unauthorized: Cannot forward this letter' };
+    }
+
+    // Prevent forwarding to the same department
+    if (validated.to_department === letter.current_department) {
+      return { success: false, error: 'Cannot forward letter to the same department' };
     }
 
     validateStateTransition(letter.status, 'forwarded', 'forward');

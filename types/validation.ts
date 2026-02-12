@@ -36,14 +36,11 @@ export const MovementStatusEnum = z.enum([
 ]);
 
 export const CreateLetterSchema = z.object({
-  serial_number: z.string().regex(
-    /^[A-Z0-9-]+$/,
-    'Serial number must contain only uppercase letters, numbers, and hyphens'
-  ).optional().nullable(),
+  serial_number: z.string().optional().nullable(),
   subject: z.string().min(5, 'Subject must be at least 5 characters'),
   date_generated: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Invalid date format').optional().or(z.literal('')).transform(val => val === '' ? undefined : val),
   date_minuted: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Invalid date format').optional().or(z.literal('')).transform(val => val === '' ? undefined : val),
-  amount: z.number().positive('Amount must be positive').optional().nullable(),
+  amount: z.string().optional().nullable(),
 });
 
 export const DispatchLetterSchema = z.object({
@@ -73,10 +70,7 @@ export const CompleteProcessingSchema = z.object({
 
 export const AttachPVSchema = z.object({
   letter_id: z.string().uuid('Invalid letter ID'),
-  pv_id: z.string().min(1, 'PV ID is required').regex(
-    /^PV-[0-9]{4}-[0-9]+$/,
-    'PV ID must be in format PV-YYYY-NNNN (e.g., PV-2026-0001)'
-  ),
+  pv_id: z.string().min(1, 'PV ID is required'),
 });
 
 export const ForwardLetterSchema = z.object({
