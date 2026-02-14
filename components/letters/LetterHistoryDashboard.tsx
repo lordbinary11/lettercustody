@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react';
 import { Letter } from '@/types';
 import { EnhancedLetterTable } from './EnhancedLetterTable';
 import { LetterDetailPanel } from './LetterDetailPanel';
+import { calculateAverageProcessingTime, formatProcessingTime } from '@/lib/analytics';
 
 interface LetterHistoryDashboardProps {
   letters: Letter[];
@@ -12,17 +13,15 @@ interface LetterHistoryDashboardProps {
 
 export function LetterHistoryDashboard({ letters, departmentName }: LetterHistoryDashboardProps) {
   const [selectedLetter, setSelectedLetter] = useState<Letter | null>(null);
+  const [letterDetails, setLetterDetails] = useState<Letter | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedMonth, setSelectedMonth] = useState<string>('');
   const [selectedYear, setSelectedYear] = useState<string>('');
 
-  const formatDate = (date: string) => {
-    return new Date(date).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
-  };
+  // Calculate average processing time
+  const averageProcessingTime = useMemo(() => {
+    return calculateAverageProcessingTime(letters);
+  }, [letters]);
 
   const filteredLetters = useMemo(() => {
     let filtered = letters;
@@ -38,9 +37,9 @@ export function LetterHistoryDashboard({ letters, departmentName }: LetterHistor
 
     if (selectedMonth || selectedYear) {
       filtered = filtered.filter(letter => {
-        const letterDate = new Date(letter.updated_at);
-        const monthMatch = !selectedMonth || letterDate.getMonth() === parseInt(selectedMonth);
-        const yearMatch = !selectedYear || letterDate.getFullYear() === parseInt(selectedYear);
+        const letterDate = new Date(letter.created_at);
+        const monthMatch = !selectedMonth || (letterDate.getMonth() + 1).toString() === selectedMonth;
+        const yearMatch = !selectedYear || letterDate.getFullYear().toString() === selectedYear;
         return monthMatch && yearMatch;
       });
     }
@@ -49,7 +48,7 @@ export function LetterHistoryDashboard({ letters, departmentName }: LetterHistor
   }, [letters, searchQuery, selectedMonth, selectedYear]);
 
   const availableYears = useMemo(() => {
-    const years = letters.map(l => new Date(l.updated_at).getFullYear());
+    const years = letters.map(l => new Date(l.created_at).getFullYear());
     return Array.from(new Set(years)).sort((a, b) => b - a);
   }, [letters]);
 
@@ -69,62 +68,26 @@ export function LetterHistoryDashboard({ letters, departmentName }: LetterHistor
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="p-6 space-y-6">
       {/* Header */}
-      <div className="bg-white rounded-lg border border-gray-200 p-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Letter Processing History</h1>
-            <p className="text-sm text-gray-500 mt-1">
-              View all letters processed by {departmentName} Department
-            </p>
-          </div>
-          <div className="text-right">
-            <p className="text-3xl font-bold text-gray-900">{letters.length}</p>
-            <p className="text-sm text-gray-500">Total Processed</p>
-          </div>
-        </div>
+      <div>
+        <h1 className="text-2xl font-bold text-gray-900">Letter History</h1>
+        <p className="text-sm text-gray-500 mt-1">
+          All letters that have been processed by {departmentName}
+        </p>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="bg-white rounded-lg border border-gray-200 p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">This Month</p>
-              <p className="text-2xl font-bold text-gray-900 mt-1">
-                {letters.filter(l => {
-                  const letterDate = new Date(l.updated_at);
-                  const now = new Date();
-                  return letterDate.getMonth() === now.getMonth() && 
-                         letterDate.getFullYear() === now.getFullYear();
-                }).length}
-              </p>
+              <p className="text-sm font-medium text-gray-500">Total Processed</p>
+              <p className="text-2xl font-bold text-gray-900 mt-1">{letters.length}</p>
             </div>
             <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
               <svg className="w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-500">This Week</p>
-              <p className="text-2xl font-bold text-gray-900 mt-1">
-                {letters.filter(l => {
-                  const letterDate = new Date(l.updated_at);
-                  const weekAgo = new Date();
-                  weekAgo.setDate(weekAgo.getDate() - 7);
-                  return letterDate >= weekAgo;
-                }).length}
-              </p>
-            </div>
-            <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-              <svg className="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
             </div>
           </div>
@@ -134,7 +97,9 @@ export function LetterHistoryDashboard({ letters, departmentName }: LetterHistor
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-500">Avg. Processing Time</p>
-              <p className="text-2xl font-bold text-gray-900 mt-1">2.5 days</p>
+              <p className="text-2xl font-bold text-gray-900 mt-1">
+                {averageProcessingTime > 0 ? formatProcessingTime(averageProcessingTime) : 'N/A'}
+              </p>
             </div>
             <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
               <svg className="w-6 h-6 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">

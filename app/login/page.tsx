@@ -71,7 +71,7 @@ export default async function LoginPage() {
                 className="object-contain"
               />
             </div>
-            <h1 className="text-4xl font-bold text-white mb-2">KNUST PaperTrail</h1>
+            <h1 className="text-4xl font-bold text-white mb-2">PaperTrail</h1>
             <p className="text-knust-gray-400 text-lg">Letter Custody & Workflow System</p>
           </div>
           

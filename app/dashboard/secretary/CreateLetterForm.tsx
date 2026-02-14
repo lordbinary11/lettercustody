@@ -99,7 +99,7 @@ export function CreateLetterForm() {
 
         <div>
           <label htmlFor="date_received" className="block text-sm font-medium text-gray-700 mb-2">
-            Date Received
+            Date Received<span className="text-red-500">*</span>
           </label>
           <input
             type="date"

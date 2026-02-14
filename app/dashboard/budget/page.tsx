@@ -1,22 +1,13 @@
 import { requireRole } from '@/lib/auth';
-import { getIncomingLetters, getProcessingLetters, getProcessedLetters, getPendingMovement } from '@/lib/db';
+import { getAllDepartmentLetters } from '@/lib/db-optimized';
 import { ImprovedDashboardLayout } from '@/components/layout/ImprovedDashboardLayout';
 import { ImprovedBudgetDashboard } from './ImprovedBudgetDashboard';
 
 export default async function BudgetDashboard() {
   const user = await requireRole(['department_user']);
   
-  const incomingLetters = await getIncomingLetters('Budget');
-  const processingLetters = await getProcessingLetters('Budget');
-  const processedLetters = await getProcessedLetters('Budget');
-
-  // Fetch movements for incoming letters to show source department
-  const incomingWithMovements = await Promise.all(
-    incomingLetters.map(async (letter) => {
-      const movement = await getPendingMovement(letter.id);
-      return { ...letter, pendingMovement: movement };
-    })
-  );
+  // Single optimized database call instead of 4 separate calls
+  const { incoming, processing, processed } = await getAllDepartmentLetters('Budget');
 
   return (
     <ImprovedDashboardLayout
@@ -25,9 +16,9 @@ export default async function BudgetDashboard() {
       userEmail={user.email}
     >
       <ImprovedBudgetDashboard
-        incomingLetters={incomingWithMovements as any}
-        processingLetters={processingLetters}
-        processedLetters={processedLetters}
+        incomingLetters={incoming}
+        processingLetters={processing}
+        processedLetters={processed}
       />
     </ImprovedDashboardLayout>
   );
