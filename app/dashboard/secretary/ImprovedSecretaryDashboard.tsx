@@ -8,6 +8,8 @@ import { DepartmentSelect } from '@/components/ui/DepartmentSelect';
 import { LetterDetailPanel } from '@/components/letters/LetterDetailPanel';
 import { DispatchLetterActions } from './DispatchLetterActions';
 import { CreateLetterForm } from './CreateLetterForm';
+import { BatchLetterForm } from './BatchLetterForm';
+import { BatchLettersList } from '@/components/letters/BatchLettersList';
 
 interface ImprovedSecretaryDashboardProps {
   letters: Letter[];
@@ -16,12 +18,14 @@ interface ImprovedSecretaryDashboardProps {
 export function ImprovedSecretaryDashboard({ letters }: ImprovedSecretaryDashboardProps) {
   const [selectedLetter, setSelectedLetter] = useState<Letter | null>(null);
   const [letterDetails, setLetterDetails] = useState<LetterWithDetails | null>(null);
-  const [activeTab, setActiveTab] = useState<'awaiting' | 'all'>('all');
+  const [activeTab, setActiveTab] = useState<'awaiting' | 'all' | 'batches'>('all');
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [showBatchForm, setShowBatchForm] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState<string>('');
   const [selectedYear, setSelectedYear] = useState<string>('');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isBulkLoading, setIsBulkLoading] = useState(false);
+  const [batches, setBatches] = useState<any[]>([]);
 
   // Fetch letter details when a letter is selected
   useEffect(() => {
@@ -38,6 +42,22 @@ export function ImprovedSecretaryDashboard({ letters }: ImprovedSecretaryDashboa
       setLetterDetails(null);
     }
   }, [selectedLetter]);
+
+  // Fetch batches
+  const fetchBatches = () => {
+    fetch('/api/letters/batch')
+      .then(res => res.json())
+      .then(data => {
+        if (data.batches) {
+          setBatches(data.batches);
+        }
+      })
+      .catch(err => console.error('Failed to load batches:', err));
+  };
+
+  useEffect(() => {
+    fetchBatches();
+  }, []);
 
   // Filter letters by month, year, and search query
   const filteredLetters = useMemo(() => {
@@ -154,15 +174,26 @@ export function ImprovedSecretaryDashboard({ letters }: ImprovedSecretaryDashboa
       <div className="bg-white rounded-xl border border-knust-gray-200 shadow-card">
         <div className="px-6 py-4 border-b border-knust-gray-200 flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-semibold text-knust-black">Create New Letter</h2>
-            <p className="text-sm text-knust-gray-500 mt-1">Fill in the details to create and dispatch a letter</p>
+            <h2 className="text-lg font-semibold text-knust-black">Create Letters</h2>
+            <p className="text-sm text-knust-gray-500 mt-1">Create individual letters or upload bulk letters via CSV</p>
           </div>
-          <button
-            onClick={() => setShowCreateForm(!showCreateForm)}
-            className="px-4 py-2.5 bg-knust-green-500 hover:bg-knust-green-700 text-white font-medium rounded-lg transition-colors shadow-sm"
-          >
-            {showCreateForm ? 'Hide Form' : '+ New Letter'}
-          </button>
+          <div className="flex gap-3">
+            <button
+              onClick={() => setShowBatchForm(true)}
+              className="px-4 py-2.5 bg-knust-green-600 hover:bg-knust-green-700 text-white font-medium rounded-lg transition-colors shadow-sm flex items-center gap-2"
+            >
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+              </svg>
+              Batch Upload
+            </button>
+            <button
+              onClick={() => setShowCreateForm(!showCreateForm)}
+              className="px-4 py-2.5 bg-knust-green-500 hover:bg-knust-green-700 text-white font-medium rounded-lg transition-colors shadow-sm"
+            >
+              {showCreateForm ? 'Hide Form' : '+ New Letter'}
+            </button>
+          </div>
         </div>
         {showCreateForm && (
           <div className="p-6">
@@ -209,11 +240,30 @@ export function ImprovedSecretaryDashboard({ letters }: ImprovedSecretaryDashboa
                 {createdLetters.length}
               </span>
             </button>
+            <button
+              onClick={() => setActiveTab('batches')}
+              className={`flex-1 py-4 px-6 text-center border-b-2 font-medium text-sm transition-colors ${
+                activeTab === 'batches'
+                  ? 'border-knust-green-500 text-knust-green-600'
+                  : 'border-transparent text-knust-gray-500 hover:text-knust-gray-700 hover:border-knust-gray-300'
+              }`}
+            >
+              Batch Letters
+              <span className={`ml-2 px-2 py-0.5 rounded-full text-xs ${
+                activeTab === 'batches'
+                  ? 'bg-knust-green-100 text-knust-green-600'
+                  : 'bg-knust-gray-100 text-knust-gray-600'
+              }`}>
+                {batches.length}
+              </span>
+            </button>
           </nav>
         </div>
 
         <div className="p-6">
-          {activeTab === 'awaiting' ? (
+          {activeTab === 'batches' ? (
+            <BatchLettersList batches={batches} onRefresh={fetchBatches} />
+          ) : activeTab === 'awaiting' ? (
             <BulkLetterTable
               letters={createdLetters}
               onRowClick={setSelectedLetter}
@@ -317,6 +367,17 @@ export function ImprovedSecretaryDashboard({ letters }: ImprovedSecretaryDashboa
               </div>
             )
           }
+        />
+      )}
+
+      {/* Batch Letter Form Modal */}
+      {showBatchForm && (
+        <BatchLetterForm 
+          onClose={() => setShowBatchForm(false)} 
+          onSuccess={() => {
+            fetchBatches();
+            setShowBatchForm(false);
+          }}
         />
       )}
     </div>
