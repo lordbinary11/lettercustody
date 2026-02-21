@@ -5,6 +5,8 @@ import { BatchDispatchModal } from './BatchDispatchModal';
 import { BulkLetterTable } from './BulkLetterTable';
 import { Letter } from '@/types';
 
+type Department = 'Secretary' | 'Budget' | 'Payables' | 'Payroll' | 'StudentSection' | 'CashOffice' | 'FinalAccounts' | 'Audit';
+
 interface Batch {
   id: string;
   batch_name: string;
@@ -14,17 +16,34 @@ interface Batch {
   metadata: any;
 }
 
+interface BatchAction {
+  label: string;
+  action: (batchId: string, toDepartment?: Department) => void;
+  icon: string;
+}
+
 interface BatchLettersListProps {
   batches: Batch[];
   onRefresh: () => void;
+  showBatchActions?: boolean;
+  batchActions?: BatchAction[];
+  emptyMessage?: string;
 }
 
-export function BatchLettersList({ batches, onRefresh }: BatchLettersListProps) {
+export function BatchLettersList({ 
+  batches, 
+  onRefresh, 
+  showBatchActions = false, 
+  batchActions = [],
+  emptyMessage = "No batch letters created yet"
+}: BatchLettersListProps) {
   const [selectedBatch, setSelectedBatch] = useState<Batch | null>(null);
   const [expandedBatch, setExpandedBatch] = useState<string | null>(null);
   const [batchLetters, setBatchLetters] = useState<Record<string, Letter[]>>({});
   const [loadingBatch, setLoadingBatch] = useState<string | null>(null);
   const [batchStats, setBatchStats] = useState<Record<string, { dispatched: number; total: number }>>({});
+  const [showBatchActionModal, setShowBatchActionModal] = useState<string | null>(null);
+  const [selectedForwardDepartment, setSelectedForwardDepartment] = useState<Department | ''>('');
 
   const formatDate = (date: string) => {
     return new Date(date).toLocaleDateString('en-US', {
@@ -64,6 +83,25 @@ export function BatchLettersList({ batches, onRefresh }: BatchLettersListProps) 
     const stats = batchStats[batchId];
     if (!stats) return null;
     return stats.total - stats.dispatched;
+  };
+
+  const handleBatchAction = (batchId: string, action: BatchAction) => {
+    if (action.icon === 'forward') {
+      setShowBatchActionModal(batchId);
+    } else {
+      action.action(batchId);
+    }
+  };
+
+  const handleForwardConfirm = (batchId: string) => {
+    if (selectedForwardDepartment) {
+      const forwardAction = batchActions.find(a => a.icon === 'forward');
+      if (forwardAction) {
+        forwardAction.action(batchId, selectedForwardDepartment);
+        setShowBatchActionModal(null);
+        setSelectedForwardDepartment('');
+      }
+    }
   };
 
   const fetchBatchLetters = async (batchId: string) => {
@@ -152,7 +190,7 @@ export function BatchLettersList({ batches, onRefresh }: BatchLettersListProps) 
           <svg className="w-12 h-12 mx-auto text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
           </svg>
-          <p className="text-gray-500">No batch letters created yet</p>
+          <p className="text-gray-500">{emptyMessage}</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -222,7 +260,24 @@ export function BatchLettersList({ batches, onRefresh }: BatchLettersListProps) 
                         </>
                       )}
                     </button>
-                    {batchStats[batch.id] && isBatchFullyDispatched(batch.id) ? (
+                    
+                    {showBatchActions && batchActions.map((action, index) => (
+                      <button
+                        key={index}
+                        onClick={() => handleBatchAction(batch.id, action)}
+                        className={`px-4 py-2 text-white text-sm font-medium rounded-lg transition-colors flex items-center gap-2 ${
+                          action.icon === 'processing' ? 'bg-blue-600 hover:bg-blue-700' :
+                          action.icon === 'processed' ? 'bg-green-600 hover:bg-green-700' :
+                          action.icon === 'forward' ? 'bg-purple-600 hover:bg-purple-700' :
+                          action.icon === 'archive' ? 'bg-red-600 hover:bg-red-700' :
+                          'bg-knust-green-600 hover:bg-knust-green-700'
+                        }`}
+                      >
+                        {action.label}
+                      </button>
+                    ))}
+                    
+                    {!showBatchActions && (batchStats[batch.id] && isBatchFullyDispatched(batch.id) ? (
                       <div className="px-4 py-2 bg-gray-100 text-gray-600 text-sm font-medium rounded-lg flex items-center gap-2">
                         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -239,7 +294,7 @@ export function BatchLettersList({ batches, onRefresh }: BatchLettersListProps) 
                         </svg>
                         {batchStats[batch.id] ? `Dispatch ${getPendingLettersCount(batch.id)} Pending` : 'Dispatch Batch'}
                       </button>
-                    )}
+                    ))}
                   </div>
                 </div>
 
@@ -315,6 +370,52 @@ export function BatchLettersList({ batches, onRefresh }: BatchLettersListProps) 
           onClose={() => setSelectedBatch(null)}
           onSuccess={handleDispatchSuccess}
         />
+      )}
+      
+      {/* Forward Batch Modal */}
+      {showBatchActionModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-2xl max-w-md w-full">
+            <div className="p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Forward Batch</h3>
+              <p className="text-sm text-gray-600 mb-4">
+                Select the department to forward this batch to:
+              </p>
+              <select
+                value={selectedForwardDepartment}
+                onChange={(e) => setSelectedForwardDepartment(e.target.value as Department)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-knust-green-500 focus:border-knust-green-500 mb-4"
+              >
+                <option value="">Select a department</option>
+                <option value="Secretary">Secretary</option>
+                <option value="Budget">Budget</option>
+                <option value="Payables">Payables</option>
+                <option value="StudentSection">Student Section</option>
+                <option value="CashOffice">Cash Office</option>
+                <option value="FinalAccounts">Final Accounts</option>
+                <option value="Audit">Audit</option>
+              </select>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => {
+                    setShowBatchActionModal(null);
+                    setSelectedForwardDepartment('');
+                  }}
+                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => handleForwardConfirm(showBatchActionModal)}
+                  disabled={!selectedForwardDepartment}
+                  className="flex-1 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Forward Batch
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

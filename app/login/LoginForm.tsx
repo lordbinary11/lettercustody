@@ -29,6 +29,8 @@ export function LoginForm() {
         router.push('/dashboard/payables');
       } else if (result.user.department === 'CashOffice') {
         router.push('/dashboard/cashoffice');
+      } else if (result.user.department === 'Payroll') {
+        router.push('/dashboard/payroll');
       } else {
         // Default to budget dashboard for other departments
         router.push('/dashboard/budget');

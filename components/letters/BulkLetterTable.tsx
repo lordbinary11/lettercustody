@@ -6,6 +6,13 @@ import { StatusBadge } from '@/components/ui/StatusBadge';
 import { DepartmentBadge } from '@/components/ui/DepartmentBadge';
 import { DepartmentSelect } from '@/components/ui/DepartmentSelect';
 
+interface BulkAction {
+  label: string;
+  action: (letterIds: string[]) => void;
+  icon?: string;
+  variant?: 'default' | 'danger';
+}
+
 interface BulkLetterTableProps {
   letters: Letter[];
   onRowClick?: (letter: Letter) => void;
@@ -17,6 +24,7 @@ interface BulkLetterTableProps {
   onBulkProcess?: (letterIds: string[]) => void;
   onBulkForward?: (letterIds: string[], targetDepartment: string) => void;
   onBulkForwardToDepartment?: (letterIds: string[], targetDepartment: string) => void;
+  bulkActions?: BulkAction[];
   isBulkLoading?: boolean;
   bulkActionType?: 'accept-reject' | 'process' | 'forward' | 'forward-custom';
 }
@@ -27,6 +35,7 @@ type SortDirection = 'asc' | 'desc';
 export function BulkLetterTable({ 
   letters, 
   onRowClick, 
+  bulkActions,
   showDepartment = false,
   emptyMessage = 'No letters found',
   showBulkActions = false,
@@ -260,6 +269,20 @@ export function BulkLetterTable({
                   disabled={isBulkLoading}
                 />
               )}
+              {bulkActions && bulkActions.map((action, index) => (
+                <button
+                  key={index}
+                  onClick={() => action.action(Array.from(selectedLetters))}
+                  disabled={isBulkLoading}
+                  className={`px-4 py-2.5 font-medium rounded-lg transition-colors text-sm shadow-sm ${
+                    action.variant === 'danger'
+                      ? 'bg-red-600 hover:bg-red-700 disabled:bg-gray-400 text-white'
+                      : 'bg-knust-green-500 hover:bg-knust-green-700 disabled:bg-gray-400 text-white'
+                  }`}
+                >
+                  {action.label} ({selectedLetters.size})
+                </button>
+              ))}
             </div>
           </div>
         </div>

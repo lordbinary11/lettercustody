@@ -21,6 +21,7 @@ export type UserRole =
   | 'secretary'
   | 'department_user'
   | 'payables_user'
+  | 'payroll_user'
   | 'admin'
   | 'audit';
 
@@ -54,6 +55,7 @@ export interface Letter {
   current_department: Department | null;
   is_archived: boolean;
   pv_id: string | null;
+  batch_id: string | null;
   created_by: string;
   created_at: string;
   updated_at: string;

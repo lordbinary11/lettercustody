@@ -107,5 +107,5 @@ export const LETTER_STATUS_COLORS: Record<LetterStatus, string> = {
   processing: 'bg-purple-100 text-purple-800',
   processed: 'bg-green-100 text-green-800',
   rejected: 'bg-red-100 text-red-800',
-  archived: 'bg-slate-100 text-slate-800',
+  archived: 'bg-red-100 text-red-800',
 };

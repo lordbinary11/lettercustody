@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
     const supabase = await createClient();
 
     // Create batch record
-    const { data: batch, error: batchError } = await supabase
+    const { data: batch, error: batchError } = await (supabase as any)
       .from('letter_batches')
       .insert({
         batch_name: batchName,
@@ -101,7 +101,7 @@ export async function POST(request: NextRequest) {
       };
     });
 
-    const { data: createdLetters, error: lettersError } = await supabase
+    const { data: createdLetters, error: lettersError } = await (supabase as any)
       .from('letters')
       .insert(letters)
       .select();
@@ -110,7 +110,7 @@ export async function POST(request: NextRequest) {
       console.error('Error creating letters:', lettersError);
       
       // Rollback: Delete the batch
-      await supabase.from('letter_batches').delete().eq('id', batch.id);
+      await (supabase as any).from('letter_batches').delete().eq('id', batch.id);
       
       return NextResponse.json(
         { error: 'Failed to create letters' },
@@ -140,7 +140,7 @@ export async function POST(request: NextRequest) {
 // GET endpoint to retrieve batch information
 export async function GET(request: NextRequest) {
   try {
-    const user = await requireRole(['secretary', 'admin', 'audit']);
+    const user = await requireRole(['secretary', 'admin', 'audit', 'department_user', 'payroll_user', 'payables_user']);
     const { searchParams } = new URL(request.url);
     const batchId = searchParams.get('batch_id');
 
@@ -172,12 +172,55 @@ export async function GET(request: NextRequest) {
         letters: letters || []
       });
     } else {
-      // Get all batches for the user
-      const { data: batches, error } = await supabase
+      // Get all batches for the user - either created by user OR have letters dispatched to user's department
+      let batches = [];
+      let error = null;
+
+      // First, get batches created by the user
+      const { data: userBatches, error: userBatchesError } = await (supabase as any)
         .from('letter_batches')
         .select('*')
-        .eq('created_by', user.id)
-        .order('created_at', { ascending: false });
+        .eq('created_by', user.id);
+
+      if (!userBatchesError) {
+        batches.push(...userBatches);
+      }
+
+      // Second, get batches that have letters dispatched to user's department
+      const { data: dispatchedBatches, error: dispatchedError } = await (supabase as any)
+        .from('movements')
+        .select(`
+          letter_id,
+          to_department,
+          letters!inner (
+            batch_id
+          )
+        `)
+        .eq('to_department', user.department)
+        .not('letters.batch_id', 'is', null);
+
+      if (!dispatchedError && dispatchedBatches) {
+        const batchIds = [...new Set(dispatchedBatches.map(m => m.letters.batch_id))];
+        
+        if (batchIds.length > 0) {
+          const existingBatchIds = batches.map(b => b.id);
+          const newBatchIds = batchIds.filter(id => !existingBatchIds.includes(id));
+          
+          if (newBatchIds.length > 0) {
+            const { data: departmentBatches, error: deptBatchesError } = await supabase
+              .from('letter_batches')
+              .select('*')
+              .in('id', newBatchIds);
+
+            if (!deptBatchesError && departmentBatches) {
+              batches.push(...departmentBatches);
+            }
+          }
+        }
+      }
+
+      // Sort by created_at
+      batches.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
       if (error) {
         console.error('Error fetching batches:', error);

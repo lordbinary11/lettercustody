@@ -13,7 +13,7 @@ const statusConfig: Record<string, { label: string; className: string }> = {
   processing: { label: 'Processing', className: 'bg-knust-yellow-100 text-knust-yellow-800 border-knust-yellow-300' },
   processed: { label: 'Processed', className: 'bg-purple-50 text-purple-700 border-purple-200' },
   rejected: { label: 'Rejected', className: 'bg-knust-red-50 text-knust-red-700 border-knust-red-200' },
-  archived: { label: 'Archived', className: 'bg-knust-gray-100 text-knust-gray-600 border-knust-gray-300' },
+  archived: { label: 'Archived', className: 'bg-red-100 text-red-600 border-red-300' },
   received: { label: 'Processing', className: 'bg-knust-yellow-100 text-knust-yellow-800 border-knust-yellow-300' },
 };
 

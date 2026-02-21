@@ -25,6 +25,8 @@ export default async function LoginPage() {
         redirect('/dashboard/payables');
       } else if (userProfile.department === 'CashOffice') {
         redirect('/dashboard/cashoffice');
+      } else if (userProfile.department === 'Payroll') {
+        redirect('/dashboard/payroll');
       } else {
         redirect('/dashboard/cashoffice');
       }
